@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | STUMDieY</title>
+    <style>
+        /* Base Styles */
+        :root {
+          --primary-color: #f1eee9;
+          --secondary-color: #f54725;
+          --tertiary-color: #f9d678;
+          --text-dark: #13313c;
+          --text-light: #475569;
+          --white: #ffffff;
+          --max-width: 1200px;
+          --header-font: "Rubik", sans-serif;
+        }
+
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: var(--header-font);
+        }
+
+        body {
+          background-color: var(--primary-color);
+          color: var(--text-dark);
+          line-height: 1.6;
+          transition: all 0.3s ease;
+        }
+
+        /* Header/Navigation */
+        header {
+          background-color: var(--white);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          padding: 1rem 2rem;
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+        }
+
+        nav {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          max-width: var(--max-width);
+          margin: 0 auto;
+        }
+
+        .logo {
+          font-size: 1.5rem;
+          font-weight: bold;
+          color: var(--secondary-color);
+          text-decoration: none;
+        }
+
+        .nav-links {
+          display: flex;
+          gap: 2rem;
+        }
+
+        .nav-links a {
+          color: var(--text-dark);
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+          color: var(--secondary-color);
+        }
+
+        .btn {
+          padding: 0.5rem 1rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.3s;
+          text-decoration: none;
+          font-weight: 500;
+        }
+
+        .btn-primary {
+          background-color: var(--secondary-color);
+          color: var(--white);
+          border: none;
+        }
+
+        .btn-primary:hover {
+          background-color: #e03e20;
+        }
+
+        /* Contact Section */
+        .contact {
+          padding: 8rem 2rem 5rem;
+          background: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+          <a href="/main" class="logo">STUMDieY</a>
+          <div class="nav-links">
+            <a href="/main">Home</a>
+            <a href="/notes">Notes</a>
+            <a href="/pyq">PYQs</a>
+            <a href="/team">Team</a>
+            <a href="/contact">Contact</a>
+          </div>
+        </nav>
+      </header>
+      <section class="contact" id="contact">
+        <div style="max-width: 700px; margin: 0 auto;">
+          <h2 style="font-size: 2.5rem; color: var(--secondary-color); text-align: center; margin-bottom: 2rem;">Contact Us</h2>
+          <form action="/contact" method="post" style="background: #f9d67822; border-radius: 8px; padding: 2rem; box-shadow: 0 2px 8px #0001;">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem;">
+              <input type="text" name="name" placeholder="Your Name" required style="flex: 1 1 200px; padding: 0.75rem; border-radius: 4px; border: 1px solid #ccc;">
+              <input type="email" name="email" placeholder="Your Email" required style="flex: 1 1 200px; padding: 0.75rem; border-radius: 4px; border: 1px solid #ccc;">
+            </div>
+            <textarea name="message" placeholder="Your Message" required style="width: 100%; margin-top: 1rem; padding: 0.75rem; border-radius: 4px; border: 1px solid #ccc; min-height: 120px;"></textarea>
+            <button type="submit" class="btn btn-primary" style="margin-top: 1rem; width: 100%;">Send Message</button>
+          </form>
+          <div style="text-align: center; margin-top: 2rem; color: var(--text-light);">
+            <p><b>Email:</b>shivansh0962@gmail.com</p>
+            <p><b>Phone:</b>8081654984</p>
+            <p><b>Address:</b> SMS Clg, Varanasi, U.P., India</p>
+          </div>
+        </div>
+      </section>
+</body>
+</html>

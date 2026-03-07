@@ -1,0 +1,495 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PYQs</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="/images/vycvhqyv.png">
+    <style>
+    :root {
+      --primary-color: #f1eee9;
+      --secondary-color: #f54725;
+      --tertiary-color: #f9d678;
+      --text-dark: #13313c;
+      --text-light: #475569;
+      --white: #ffffff;
+      --max-width: 1200px;
+      --header-font: "Rubik", sans-serif;
+    }
+
+    * {
+      padding: 0;
+      margin: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+      font-family: var(--header-font);
+      background-color: var(--primary-color);
+      color: var(--text-dark);
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+    }
+
+    .dark-mode {
+      --primary-color: #13313c;
+      --secondary-color: #f9d678;
+      --tertiary-color: #f54725;
+      --text-dark: #f1eee9;
+      --text-light: #cccccc;
+      --white: #1a1a1a;
+    }
+
+    .navbar {
+      background-color: var(--secondary-color);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .navbar ul li {
+      margin: 5px 15px;
+    }
+
+    .navbar ul li a {
+      color: var(--white);
+      text-decoration: none;
+      font-size: 1.1rem;
+      padding: 8px 16px;
+      display: block;
+      font-weight: 500;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar ul li a:hover {
+      background-color: var(--tertiary-color);
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--secondary-color);
+      color: var(--white);
+      border: none;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+    }
+
+    .theme-toggle:hover {
+      background-color: var(--tertiary-color);
+      transform: scale(1.1);
+    }
+
+    .section__container {
+      max-width: var(--max-width);
+      margin: auto;
+      padding: 3rem 1rem;
+    }
+
+    .section__header {
+      margin-bottom: 2rem;
+      font-size: 2.25rem;
+      font-weight: 600;
+      text-align: center;
+      color: var(--secondary-color);
+      position: relative;
+    }
+
+    .section__header::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background-color: var(--tertiary-color);
+      margin: 10px auto;
+    }
+
+    .price__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .price__card {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      background-color: var(--white);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border: 2px solid transparent;
+    }
+
+    .price__card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      border-color: var(--secondary-color);
+    }
+
+    .price__card__content {
+      flex: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .price__card h4 {
+      margin-bottom: 1rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      text-align: center;
+    }
+
+    .price__card h3 {
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      border-bottom: 2px solid var(--tertiary-color);
+      text-align: center;
+    }
+
+    .price__card p {
+      margin-bottom: 1rem;
+      color: var(--text-light);
+      text-align: center;
+    }
+
+    .price__card p i {
+      margin-right: 0.5rem;
+      color: var(--secondary-color);
+    }
+
+    .price__btn {
+      display: block;
+      width: 80%;
+      margin: 0 auto;
+      padding: 0.8rem;
+      background-color: var(--secondary-color);
+      color: var(--white);
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .price__btn:hover {
+      background-color: var(--tertiary-color);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .price__btn i {
+      margin-left: 5px;
+    }
+
+    /* Loading animation */
+    .loader {
+      display: none;
+      border: 4px solid var(--primary-color);
+      border-top: 4px solid var(--secondary-color);
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: var(--secondary-color);
+      color: var(--white);
+      padding: 15px 25px;
+      border-radius: 5px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transform: translateX(200%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .navbar ul li {
+        margin: 5px 10px;
+      }
+      
+      .navbar ul li a {
+        font-size: 1rem;
+        padding: 6px 12px;
+      }
+      
+      .section__header {
+        font-size: 1.8rem;
+      }
+      
+      .price__card {
+        padding: 1.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .navbar ul {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .navbar ul li {
+        margin: 5px 0;
+        width: 100%;
+        text-align: center;
+      }
+      
+      .price__grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="/main"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/notes"><i class="fas fa-book"></i> Notes</a></li>
+            <li><a href="/contact"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+    </nav>
+    
+    <section class="section__container price__container">
+      <h2 class="section__header">Previous Year Questions</h2>
+  
+      <div class="price__grid">
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>FIRST SEM</h4>
+            <h3>Question Papers</h3>
+            <p>
+              <i class="fas fa-check-circle"></i>
+              "Click the link below to download the previous year question paper"
+            </p>
+            <p>
+              <i class="fas fa-file-pdf"></i>
+              PDF format | All subjects included
+            </p>
+          </div>
+          <a href="/download/pdf/example1.pdf" class="price__btn" onclick="showDownloadNotification('First Sem')">
+            Download <i class="fas fa-download"></i>
+          </a>
+        </div>
+        
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Second Sem</h4>
+            <h3>Question Papers</h3>
+            <p>
+              <i class="fas fa-check-circle"></i>
+              "Click the link below to download the previous year question paper"
+            </p>
+            <p>
+              <i class="fas fa-file-pdf"></i>
+              PDF format | All subjects included
+            </p>
+          </div>
+          <a href="/download/pdf/example2.pdf" class="price__btn" onclick="showDownloadNotification('Second Sem')">
+            Download <i class="fas fa-download"></i>
+          </a>
+        </div>
+        
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Third Sem</h4>
+            <h3>Question Papers</h3>
+            <p>
+              <i class="fas fa-check-circle"></i>
+              "Click the link below to download the previous year question paper"
+            </p>
+            <p>
+              <i class="fas fa-file-pdf"></i>
+              PDF format | All subjects included
+            </p>
+          </div>
+          <a href="/download/pdf/example3.pdf" class="price__btn" onclick="showDownloadNotification('Third Sem')">
+            Download <i class="fas fa-download"></i>
+          </a>
+        </div>
+      </div>
+      
+      <div class="price__grid">
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Fourth Sem</h4>
+            <h3>Question Papers</h3>
+            <p>
+              <i class="fas fa-check-circle"></i>
+              "Click the link below to download the previous year question paper"
+            </p>
+            <p>
+              <i class="fas fa-file-pdf"></i>
+              PDF format | All subjects included
+            </p>
+          </div>
+          <a href="/download/pdf/example4.pdf" class="price__btn" onclick="showDownloadNotification('Fourth Sem')">
+            Download <i class="fas fa-download"></i>
+          </a>
+        </div>
+        
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Fifth Sem</h4>
+            <h3>Question Papers</h3>
+            <p>
+              <i class="fas fa-check-circle"></i>
+              "Click the link below to download the previous year question paper"
+            </p>
+            <p>
+              <i class="fas fa-file-pdf"></i>
+              PDF format | All subjects included
+            </p>
+          </div>
+          <a href="/download/pdf/example5.pdf" class="price__btn" onclick="showDownloadNotification('Fifth Sem')">
+            Download <i class="fas fa-download"></i>
+          </a>
+        </div>
+        
+        <div class="price__card">
+          <div class="price__card__content">
+            <h4>Sixth Sem</h4>
+            <h3>Question Papers</h3>
+            <p>
+              <i class="fas fa-check-circle"></i>
+              "Click the link below to download the previous year question paper"
+            </p>
+            <p>
+              <i class="fas fa-file-pdf"></i>
+              PDF format | All subjects included
+            </p>
+          </div>
+          <a href="/download/pdf/example6.pdf" class="price__btn" onclick="showDownloadNotification('Sixth Sem')">
+            Download <i class="fas fa-download"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+    
+    <div class="notification" id="notification">
+      Downloading <span id="downloadName"></span> papers...
+    </div>
+    
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+    </button>
+    
+    <script>
+      // Theme toggle functionality
+      const themeToggle = document.getElementById('themeToggle');
+      const body = document.body;
+      const icon = themeToggle.querySelector('i');
+      
+      // Check for saved theme preference
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'dark') {
+        body.classList.add('dark-mode');
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      }
+      
+      themeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        if (body.classList.contains('dark-mode')) {
+          icon.classList.remove('fa-moon');
+          icon.classList.add('fa-sun');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          icon.classList.remove('fa-sun');
+          icon.classList.add('fa-moon');
+          localStorage.setItem('theme', 'light');
+        }
+      });
+      
+      // Download notification
+      function showDownloadNotification(name) {
+        const notification = document.getElementById('notification');
+        const downloadName = document.getElementById('downloadName');
+        
+        downloadName.textContent = name;
+        notification.classList.add('show');
+        
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+      }
+      
+      // Simulate loading for downloads
+      document.querySelectorAll('.price__btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          // In a real implementation, you might want to show a loader here
+          // while the file is being prepared for download
+          // For demo purposes, we're just showing the notification
+        });
+      });
+      
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          const targetId = this.getAttribute('href');
+          if (targetId === '#') return;
+          
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    </script>
+</body>
+</html>
+

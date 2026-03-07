@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/images/vycvhqyv.png">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.0.0/fonts/remixicon.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+:root {
+    --primary-color: #eee6d2;
+    --secondary-color: #e81564;
+    --tertiary-color: #4a6fa5;
+    --extra-light: #f5f5f4;
+    --text-dark: #333333;
+    --text-light: #777777;
+    --white: #ffffff;
+    --dark-bg: #1a1a2e;
+    --dark-card: #16213e;
+    --dark-text: #f0f0f0;
+    --dark-secondary: #ff6b6b;
+    --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background-color: var(--primary-color);
+    color: var(--text-dark);
+    transition: var(--transition);
+}
+
+body.dark-mode {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+.container {
+    min-height: calc(100vh - 70px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 2rem;
+}
+
+.profile__card {
+    width: 19.5rem;
+    height: 32rem;
+    background-color: var(--extra-light);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+}
+
+body.dark-mode .profile__card {
+    background-color: var(--dark-card);
+    color: var(--dark-text);
+}
+
+.header {
+    padding: 1rem 0;
+    position: relative;
+}
+
+.header::before {
+    position: absolute;
+    content: "";
+    height: 50%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    transition: var(--transition);
+}
+
+.image {
+    width: 12rem;
+    height: 12rem;
+    margin: 1rem auto;
+    overflow: hidden;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0.5rem solid var(--extra-light);
+    transition: var(--transition);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode .image {
+    border-color: var(--dark-card);
+}
+
+.image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.profile__card h1 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1.5rem;
+    color: var(--secondary-color);
+    transition: var(--transition);
+}
+
+body.dark-mode .profile__card h1 {
+    color: var(--dark-secondary);
+}
+
+.profile__card p {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+body.dark-mode .profile__card p {
+    color: var(--dark-text);
+}
+
+.footer {
+    position: absolute;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    bottom: -60px;
+    transition: var(--transition);
+}
+
+body.dark-mode .footer {
+    background-color: var(--dark-secondary);
+}
+
+.footer span {
+    font-size: 1.5rem;
+    color: var(--extra-light);
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.footer span:hover {
+    transform: scale(1.1);
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile__card:hover .header::before {
+    background-color: var(--secondary-color);
+}
+
+body.dark-mode .profile__card:hover .header::before {
+    background-color: var(--dark-secondary);
+}
+
+.profile__card:hover .image {
+    transform: scale(0.85);
+}
+
+.profile__card:hover .footer {
+    bottom: 0;
+}
+
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--secondary-color);
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    transition: var(--transition);
+}
+
+body.dark-mode .navbar {
+    background-color: var(--dark-secondary);
+}
+
+.navbar-brand a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.navbar-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.navbar-item a {
+    color: var(--white);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.navbar-item a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    border: none;
+    transition: var(--transition);
+}
+
+body.dark-mode .theme-toggle {
+    background-color: var(--dark-secondary);
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.theme-toggle i {
+    font-size: 1.5rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .container {
+        gap: 2rem;
+    }
+    .profile__card {
+        width: 17rem;
+        height: 30rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        gap: 1.5rem;
+    }
+    .profile__card {
+        width: 15rem;
+        height: 28rem;
+    }
+    .image {
+        width: 10rem;
+        height: 10rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .profile__card {
+        width: 80%;
+        max-width: 22rem;
+        height: auto;
+        margin-bottom: 2rem;
+    }
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .navbar-menu {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile__card {
+        width: 90%;
+    }
+    .navbar-brand a {
+        font-size: 1.2rem;
+    }
+    .navbar-item a {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        bottom: 1rem;
+        right: 1rem;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.profile__card {
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.profile__card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.profile__card:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+.profile__card:nth-child(4) {
+    animation-delay: 0.6s;
+}
+
+.profile__card:nth-child(5) {
+    animation-delay: 0.8s;
+}
+
+.profile__card:nth-child(6) {
+    animation-delay: 1s;
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <a href="#">STUMDieY</a>
+        </div>
+        <ul class="navbar-menu">
+            <li class="navbar-item"><a href="/main">Home</a></li>
+            <li class="navbar-item"><a href="/pyq">PYQs</a></li>
+            <li class="navbar-item"><a href="/contact">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <section class="container">
+        <div class="profile__card">
+            <div class="header">
+                <div class="image">
+                    <img src="/images/i.jpg" alt="BCA I Notes" />
+                </div>
+            </div>
+            <h1>BCA-I</h1>
+            <p>ALL NOTES</p>
+            <div class="footer">
+                <a href="/bcaI" aria-label="Download BCA I Notes"><span><i class="ri-download-line"></i></span></a>
+            </div>
+        </div>
+        
+        <div class="profile__card">
+            <div class="header">
+                <div class="image">
+                    <img src="/images/i.jpg" alt="BCA II Notes" />
+                </div>
+            </div>
+            <h1>BCA-II</h1>
+            <p>ALL NOTES</p>
+            <div class="footer">
+                <a href="/bcaII" aria-label="Download BCA II Notes"><span><i class="ri-download-line"></i></span></a>
+            </div>
+        </div>
+        
+        <div class="profile__card">
+            <div class="header">
+                <div class="image">
+                    <img src="/images/i.jpg" alt="BCA III Notes" />
+                </div>
+            </div>
+            <h1>BCA-III</h1>
+            <p>ALL NOTES</p>
+            <div class="footer">
+                <a href="/bcaIII" aria-label="Download BCA III Notes"><span><i class="ri-download-line"></i></span></a>
+            </div>
+        </div>
+        
+        <div class="profile__card">
+            <div class="header">
+                <div class="image">
+                    <img src="/images/i.jpg" alt="BCA IV Notes" />
+                </div>
+            </div>
+            <h1>BCA-IV</h1>
+            <p>ALL NOTES</p>
+            <div class="footer">
+                <a href="/bcaIV" aria-label="Download BCA IV Notes"><span><i class="ri-download-line"></i></span></a>
+            </div>
+        </div>
+        
+        <div class="profile__card">
+            <div class="header">
+                <div class="image">
+                    <img src="/images/i.jpg" alt="BCA V Notes" />
+                </div>
+            </div>
+            <h1>BCA-V</h1>
+            <p>ALL NOTES</p>
+            <div class="footer">
+                <a href="/bcaV" aria-label="Download BCA V Notes"><span><i class="ri-download-line"></i></span></a>
+            </div>
+        </div>
+        
+        <div class="profile__card">
+            <div class="header">
+                <div class="image">
+                    <img src="/images/i.jpg" alt="BCA VI Notes" />
+                </div>
+            </div>
+            <h1>BCA-VI</h1>
+            <p>ALL NOTES</p>
+            <div class="footer">
+                <a href="/bcaVI" aria-label="Download BCA VI Notes"><span><i class="ri-download-line"></i></span></a>
+            </div>
+        </div>
+    </section>
+    
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <i class="ri-moon-line"></i>
+    </button>
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script>
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') {
+            body.classList.add('dark-mode');
+            icon.classList.remove('ri-moon-line');
+            icon.classList.add('ri-sun-line');
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('ri-moon-line');
+                icon.classList.add('ri-sun-line');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('ri-sun-line');
+                icon.classList.add('ri-moon-line');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        
+        // Scroll reveal animation
+        const scrollRevealOption = {
+            distance: "50px",
+            origin: "bottom",
+            duration: 1000,
+            delay: 200,
+            reset: true
+        };
+        
+        ScrollReveal().reveal(".profile__card", {
+            ...scrollRevealOption,
+            interval: 200
+        });
+        
+        // Add hover effect to cards
+        document.querySelectorAll('.profile__card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+                card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.2)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+            });
+        });
+    </script>
+</body>
+</html>

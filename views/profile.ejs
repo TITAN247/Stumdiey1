@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= user.username %>'s Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --sidebar-bg: #001f3f;
+      --main-bg: #f4f7fa;
+      --primary-color: #007bff;
+      --text-dark: #343a40;
+      --text-light: #f8f9fa;
+      --border-color: #dee2e6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--main-bg);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      background-color: var(--sidebar-bg);
+      color: var(--text-light);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      height: 100vh;
+      position: fixed;
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar-profile {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .sidebar-profile .profile-pic-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .sidebar-profile img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--primary-color);
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
+
+    .sidebar-profile .change-pic-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 5px;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid white;
+      font-size: 12px;
+    }
+
+    .sidebar-profile h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      word-break: break-word;
+    }
+
+    .sidebar-nav {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+
+    .sidebar-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar-nav li a {
+      color: var(--text-light);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    
+    .sidebar-nav li a i {
+      margin-right: 15px;
+      width: 20px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .sidebar-nav li a:hover, .sidebar-nav li.active a {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .sidebar-footer {
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #logout-btn {
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      text-align: center;
+      padding: 10px;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+    }
+
+    #logout-btn:hover {
+      background-color: #0069d9;
+    }
+
+    #delete-account-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background-color 0.3s;
+    }
+
+    #delete-account-btn:hover {
+      background-color: #c82333;
+    }
+    
+    /* Main Content */
+    .main-content {
+      margin-left: 280px;
+      flex-grow: 1;
+      padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+
+    .main-navbar {
+      display: flex;
+      justify-content: flex-end;
+      background-color: white;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .main-navbar a {
+      margin: 5px 15px;
+      text-decoration: none;
+      color: var(--text-dark);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Form styles */
+    .profile-form .form-group {
+      margin-bottom: 15px;
+    }
+
+    .profile-form label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .profile-form input,
+    .profile-form textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: inherit;
+    }
+
+    .profile-form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .profile-form button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+
+    .profile-form button:hover {
+      background-color: #0069d9;
+    }
+    
+    /* Support section styles */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .support-card {
+      background-color: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      text-align: left;
+    }
+
+    .support-card i {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .support-card h4 {
+      margin: 0 0 5px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .support-card p {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-bottom: 15px;
+    }
+
+    .support-card .btn-support {
+      width: 100%;
+      padding: 10px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .profile-details {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .profile-details hr {
+      border: 0;
+      border-top: 1px solid #eee;
+      margin: 20px 0;
+    }
+
+    /* Note viewer modal styles */
+    .note-viewer-modal {
+      display: none;
+      position: fixed;
+      z-index: 1001;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .note-viewer-modal-content {
+      background-color: #fefefe;
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .note-viewer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .note-viewer-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      word-break: break-word;
+    }
+
+    .note-viewer-close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-left: 15px;
+    }
+    
+    .note-viewer-body {
+      flex-grow: 1;
+      border: 1px solid #ddd;
+      min-height: 300px;
+    }
+
+    .note-viewer-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Styles for content sections */
+    .content-section {
+      display: none; /* Hide all sections by default */
+    }
+
+    .content-section.active {
+      display: block; /* Show the active section */
+    }
+
+    .profile-section {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .profile-section h2 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--text-dark);
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .note-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+    
+    .note-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn-note-action {
+      background: none;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-note-action.view-note-btn {
+      color: #007bff;
+      border-color: #007bff;
+    }
+    .btn-note-action.view-note-btn:hover {
+      background-color: #007bff;
+      color: white;
+    }
+    
+    .btn-note-action.delete-btn {
+      color: #dc3545;
+      border-color: #dc3545;
+    }
+    .btn-note-action.delete-btn:hover {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    .note-card {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .note-card h3 {
+      margin-top: 0;
+      margin-bottom: 5px;
+      color: var(--text-dark);
+      word-break: break-word;
+    }
+
+    .note-card p {
+      color: #555;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      word-break: break-word;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: 500;
+      transition: background-color 0.3s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+      background-color: #0069d9;
+    }
+
+    /* Alert Styles */
+    .alert {
+      padding: 15px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+      min-width: 250px;
+      display: none;
+    }
+    .alert-success {
+      color: #155724;
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+    }
+    .alert-danger {
+      color: #721c24;
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+    }
+
+
+    /* Support Modal Styles */
+    .support-modal {
+      display: none;
+      position: fixed;
+      z-index: 1002; /* Higher than note viewer */
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .support-modal-content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .support-modal-close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #aaa;
+      cursor: pointer;
+    }
+
+    /* Mobile menu toggle */
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-dark);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 10px;
+      margin-right: 10px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 992px) {
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+      }
+      
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      
+      .main-content {
+        margin-left: 0;
+      }
+      
+      .mobile-menu-toggle {
+        display: block;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-navbar {
+        justify-content: center;
+      }
+      
+      .profile-details {
+        padding: 15px;
+      }
+      
+      .note-viewer-modal-content {
+        margin: 10px;
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .main-content {
+        padding: 15px;
+      }
+      
+      .profile-form input,
+      .profile-form textarea,
+      .profile-form button {
+        padding: 8px 12px;
+      }
+      
+      .btn-primary {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+      
+      .note-actions {
+        gap: 5px;
+      }
+      
+      .btn-note-action {
+        padding: 4px 8px;
+        font-size: 0.7rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .main-navbar a {
+        margin: 5px 8px;
+        font-size: 0.9rem;
+      }
+      
+      .profile-section h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    /* Confirmation Modal Styles */
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      z-index: 9999; /* Ensure always on top */
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.3);
+      justify-content: center;
+      align-items: center;
+    }
+    .confirmation-modal-content {
+      background: #fff;
+      border-radius: 10px;
+      padding: 32px 36px 28px 36px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      min-width: 320px;
+      max-width: 90vw;
+      text-align: center;
+      position: relative;
+      font-size: 1.7rem;
+    }
+    .confirmation-modal-close {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 2.2rem;
+      color: #aaa;
+      cursor: pointer;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+    .confirmation-modal-close:hover {
+      color: #333;
+    }
+    #confirmation-modal-message {
+      margin-top: 10px;
+      font-size: 1.8rem;
+      color: #155724;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <!-- Mobile Menu Toggle -->
+  <button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-profile">
+      <div class="profile-pic-container">
+        <img src="<%= user.profilePic || '/images/default-profile.svg' %>" alt="Profile Picture">
+        <form id="profile-pic-form" action="/profile/upload" method="POST" enctype="multipart/form-data">
+          <input type="file" id="profile-pic-upload" name="profilePic" accept="image/*" style="display: none;">
+          <label for="profile-pic-upload" class="change-pic-btn">
+            <i class="fas fa-pencil-alt"></i>
+          </label>
+        </form>
+      </div>
+      <h3><%= user.fullName || user.username %></h3>
+    </div>
+    <nav class="sidebar-nav">
+      <ul>
+        <li class="active"><a href="#" data-target="profile"><i class="fas fa-user"></i> My Profile</a></li>
+        <li><a href="#" data-target="account-details"><i class="fas fa-user-cog"></i> Account Details</a></li>
+        <li><a href="#" data-target="personal-notes"><i class="fas fa-sticky-note"></i> My Personal Notes</a></li>
+        <li><a href="#" data-target="support"><i class="fas fa-life-ring"></i> Support</a></li>
+      </ul>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="/logout" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+      <button id="delete-account-btn"><i class="fas fa-trash-alt"></i> Delete Account</button>
+        </div>
+  </aside>
+
+  <main class="main-content">
+    <nav class="main-navbar">
+      <a href="/main">Home</a>
+      <a href="/notes">Notes</a>
+      <a href="/pyq">PYQs</a>
+    </nav>
+    <div class="profile-details">
+        <div id="profile" class="content-section active">
+            <h2><i class="fas fa-user"></i> My Profile</h2>
+            <p><strong>Full Name:</strong> <%= user.fullName || 'N/A' %></p>
+            <p><strong>Username:</strong> <%= user.username %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <p><strong>Phone Number:</strong> <%= user.phoneNumber || 'N/A' %></p>
+            
+            <hr>
+
+            <h3>Personal Information</h3>
+            <form id="personal-info-form" action="/profile/info" method="POST" class="profile-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" value="<%= user.fullName %>">
+            </div>
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea id="bio" name="bio" rows="4"><%= user.bio %></textarea>
+            </div>
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" name="location" value="<%= user.location %>">
+          </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" value="<%= user.phoneNumber %>">
+            </div>
+                <button type="submit">Save Changes</button>
+            </form>
+      </div>
+
+        <div id="account-details" class="content-section">
+            <h2><i class="fas fa-user-cog"></i> Account Details</h2>
+            <p><strong>Joined:</strong> <%= new Date(user.createdAt).toLocaleDateString() %></p>
+            <p><strong>Last Login:</strong> <%= user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'N/A' %></p>
+            <p><strong>PDFs Downloaded:</strong> <%= user.pdfDownloads || 0 %></p>
+        </div>
+        
+        <div id="personal-notes" class="content-section">
+            <h2><i class="fas fa-sticky-note"></i> My Personal Notes</h2>
+            <a href="/profile/notes/new" class="btn-primary" style="margin-bottom: 15px;">Add New Note</a>
+        <% if (typeof notes !== 'undefined' && notes.length > 0) { %>
+            <% notes.forEach(note => { %>
+              <div class="note-card">
+                <div class="note-header">
+                  <h3><%= note.title %></h3>
+                  <div class="note-actions">
+                                <% if (note.filePath) { %>
+                                    <button class="btn-note-action view-note-btn" data-file-path="<%= note.filePath %>" data-file-name="<%= note.title %>">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                <% } %>
+                                <a href="/profile/notes/<%= note._id %>/edit" class="btn-note-action">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="/profile/notes/<%= note._id %>/delete" method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this note?')">
+                                    <button type="submit" class="btn-note-action delete-btn">
+                                        <i class="fas fa-trash"></i> Delete
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                <% if (note.description) { %>
+                            <p><%= note.description %></p>
+                <% } %>
+                  </div>
+                    <% }) %>
+            <% } else { %>
+                <p>You have not created any notes yet.</p>
+                    <% } %>
+                  </div>
+                  
+        <div id="support" class="content-section">
+            <h2><i class="fas fa-life-ring"></i> Support</h2>
+            <div class="support-grid">
+                <div class="support-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h4>MOBILE NUMBER UPDATE</h4>
+                    <p>Update your mobile number.</p>
+                    <button class="btn-support" data-modal="mobile-update-modal">UPDATE MOBILE</button>
+                </div>
+                <div class="support-card">
+                    <i class="fas fa-envelope"></i>
+                    <h4>EMAIL ID UPDATE</h4>
+                    <p>Update and verify your new email ID.</p>
+                    <button class="btn-support" data-modal="email-update-modal">UPDATE EMAIL</button>
+                </div>
+                <div class="support-card">
+                    <i class="fas fa-lock"></i>
+                    <h4>CHANGE/RESET PASSWORD</h4>
+                    <p>Securely update your password to maintain account safety.</p>
+                    <button class="btn-support" data-modal="password-change-modal">CHANGE/RESET PASSWORD</button>
+                </div>
+              </div>
+        </div>
+    </div>
+  </main>
+
+  <!-- Modals for Support Section -->
+  <div id="mobile-update-modal" class="support-modal">
+    <div class="support-modal-content">
+      <span class="support-modal-close">&times;</span>
+      <h4>Update Mobile Number</h4>
+      <form action="/profile/update-mobile" method="POST" class="profile-form">
+        <div class="form-group">
+          <label for="newPhoneNumber">New Mobile Number</label>
+          <input type="tel" id="newPhoneNumber" name="newPhoneNumber" required>
+        </div>
+        <button type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="email-update-modal" class="support-modal">
+    <div class="support-modal-content">
+      <span class="support-modal-close">&times;</span>
+      <h4>Update Email ID</h4>
+      <form action="/profile/update-email" method="POST" class="profile-form">
+        <div class="form-group">
+          <label for="newEmail">New Email</label>
+          <input type="email" id="newEmail" name="newEmail" required>
+        </div>
+        <button type="submit">Update</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="password-change-modal" class="support-modal">
+    <div class="support-modal-content">
+      <span class="support-modal-close">&times;</span>
+      <h4>Change Password</h4>
+      <form action="/profile/change-password" method="POST" class="profile-form">
+        <div class="form-group">
+          <label for="currentPassword">Current Password</label>
+          <input type="password" id="currentPassword" name="currentPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" name="newPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="confirmPassword">Confirm New Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <button type="submit">Change Password</button>
+      </form>
+          </div>
+          </div>
+
+
+  <!-- Note Viewer Modal -->
+  <div id="note-viewer-modal" class="note-viewer-modal">
+    <div class="note-viewer-modal-content">
+      <div class="note-viewer-header">
+        <h3 id="note-viewer-title"></h3>
+        <span class="note-viewer-close">&times;</span>
+      </div>
+      <div class="note-viewer-body">
+        <iframe id="note-viewer-iframe" src=""></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div id="confirmation-modal" class="confirmation-modal">
+    <div class="confirmation-modal-content">
+      <span class="confirmation-modal-close">&times;</span>
+      <div id="confirmation-modal-message"></div>
+    </div>
+  </div>
+
+  <script>
+    // Mobile menu toggle functionality
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('sidebar');
+    
+    mobileMenuToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', (e) => {
+      if (window.innerWidth <= 992 && !sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+        sidebar.classList.remove('open');
+      }
+    });
+
+    // Account deletion
+    document.getElementById('delete-account-btn').addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+        fetch('/profile/delete', { method: 'POST' })
+          .then(response => {
+            if (response.ok) {
+              window.location.href = '/';
+            } else {
+              alert('Failed to delete account. Please try again.');
+            }
+          });
+      }
+    });
+
+    // Profile picture upload
+    document.getElementById('profile-pic-upload').addEventListener('change', () => {
+      document.getElementById('profile-pic-form').submit();
+    });
+
+    // Section navigation
+    const navLinks = document.querySelectorAll('.sidebar-nav a');
+    const contentSections = document.querySelectorAll('.content-section');
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        // Update active link
+        navLinks.forEach(navLink => navLink.parentElement.classList.remove('active'));
+        link.parentElement.classList.add('active');
+
+        // Show target content
+        const targetId = link.getAttribute('data-target');
+        contentSections.forEach(section => {
+          if (section.id === targetId) {
+            section.classList.add('active');
+          } else {
+            section.classList.remove('active');
+          }
+        });
+        
+        // Close sidebar on mobile after selection
+        if (window.innerWidth <= 992) {
+          sidebar.classList.remove('open');
+        }
+      });
+    });
+
+    // Note viewer modal script
+    const noteViewerModal = document.getElementById('note-viewer-modal');
+    const modalTitle = document.getElementById('note-viewer-title');
+    const modalIframe = document.getElementById('note-viewer-iframe');
+    const noteViewerCloseBtn = document.querySelector('.note-viewer-close');
+
+    document.querySelectorAll('.view-note-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            const filePath = button.dataset.filePath;
+            const fileName = button.dataset.fileName;
+            modalTitle.textContent = fileName;
+            modalIframe.src = filePath;
+            noteViewerModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    noteViewerCloseBtn.addEventListener('click', () => {
+        noteViewerModal.style.display = 'none';
+        modalIframe.src = '';
+        document.body.style.overflow = '';
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target == noteViewerModal) {
+            noteViewerModal.style.display = 'none';
+            modalIframe.src = '';
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Support modals script
+    document.querySelectorAll('.btn-support').forEach(button => {
+        button.addEventListener('click', () => {
+            const modalId = button.dataset.modal;
+            if (modalId) {
+                document.getElementById(modalId).style.display = 'flex';
+            }
+        });
+    });
+
+    document.querySelectorAll('.support-modal-close').forEach(supportCloseBtn => {
+        supportCloseBtn.addEventListener('click', () => {
+            supportCloseBtn.closest('.support-modal').style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('support-modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+
+    // Confirmation modal logic
+    var confirmationCloseBtn = document.querySelector('.confirmation-modal-close');
+    var modalEl = document.getElementById('confirmation-modal');
+
+    // Display alerts from URL params
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+    const error = urlParams.get('error');
+    const alertContainer = document.getElementById('alert-container');
+
+    let message = '';
+    let type = '';
+    let confirmationMessage = '';
+
+    if (success) {
+      type = 'success';
+      switch (success) {
+        case 'mobile_updated':
+          message = 'Mobile number updated successfully!';
+          confirmationMessage = 'Your mobile number has been updated successfully.';
+          break;
+        case 'email_updated':
+          message = 'Email updated successfully!';
+          confirmationMessage = 'Your email address has been updated successfully.';
+          break;
+        case 'password_changed':
+          message = 'Password changed successfully!';
+          confirmationMessage = 'Your password has been changed successfully.';
+          break;
+      }
+    } else if (error) {
+      type = 'danger';
+      switch (error) {
+        case 'mobile_update_failed':
+          message = 'Failed to update mobile number.';
+          break;
+        case 'email_in_use':
+          message = 'That email is already in use.';
+          break;
+        case 'email_update_failed':
+          message = 'Failed to update email.';
+          break;
+        case 'password_mismatch':
+          message = 'New passwords do not match.';
+          break;
+        case 'current_password_incorrect':
+          message = 'Current password is incorrect.';
+          break;
+        case 'password_change_failed':
+          message = 'Failed to change password.';
+          break;
+      }
+    }
+
+    if (message) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type}`;
+      alertDiv.textContent = message;
+      alertContainer.appendChild(alertDiv);
+      alertDiv.style.display = 'block';
+      // Debug log
+      console.log('Alert shown:', message);
+      // Hide the alert after 5 seconds
+      setTimeout(() => {
+        alertDiv.style.display = 'none';
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }, 5000);
+    }
+
+    // Show confirmation modal for success
+    if (confirmationMessage) {
+      const modal = document.getElementById('confirmation-modal');
+      const modalMsg = document.getElementById('confirmation-modal-message');
+      if (modal && modalMsg) {
+        modalMsg.textContent = confirmationMessage;
+        modal.style.display = 'flex';
+        // Debug log
+        console.log('Confirmation modal shown:', confirmationMessage);
+        // Auto-dismiss after 3.5s
+        setTimeout(() => {
+          modal.style.display = 'none';
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }, 3500);
+      } else {
+        // Fallback: show alert if modal fails
+        console.log('Modal not found, fallback to alert.');
+        if (message) {
+          alert(message);
+        }
+      }
+    }
+    // Close modal on X click
+    if (confirmationCloseBtn) {
+      confirmationCloseBtn.onclick = function() {
+        modalEl.style.display = 'none';
+        window.history.replaceState({}, document.title, window.location.pathname);
+      };
+    }
+    // Also close modal if user clicks outside content
+    if (modalEl) {
+      modalEl.onclick = function(e) {
+        if (e.target === this) {
+          this.style.display = 'none';
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      };
+    }
+  </script>
+</body>
+</html>

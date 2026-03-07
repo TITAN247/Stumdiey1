@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/stylesheets/dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+      </div>
+      <nav class="sidebar-nav">
+        <ul>
+          <li class="active"><a href="#" data-section="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          <li><a href="#" data-section="users"><i class="fas fa-users"></i> Users</a></li>
+          <li><a href="#" data-section="analytics"><i class="fas fa-chart-line"></i> Analytics</a></li>
+          <li><a href="#" data-section="settings"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="user-info">
+          <span>Welcome, Admin</span>
+          <a href="/admin/logout" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="content-section active">
+          <h1><i class="fas fa-tachometer-alt"></i> Dashboard Overview</h1>
+          
+          <div class="stats-cards">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-sign-in-alt"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Total Logins</h3>
+                <p><%= totalLogins %></p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <div class="stat-info">
+                <h3>New Users</h3>
+                <p><%= userCount %></p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="stat-info">
+                <h3>Notifications</h3>
+                <p>5</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="activity-section">
+            <h2><i class="fas fa-history"></i> Recent Activity</h2>
+            <div class="activity-list">
+              <% activity.forEach(function(act) { %>
+                <div class="activity-item">
+                  <i class="fas fa-circle activity-dot"></i>
+                  <p><%= act %></p>
+                  <span class="activity-time">Just now</span>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users-section" class="content-section">
+          <h1><i class="fas fa-users"></i> User Management</h1>
+          
+          <div class="section-tools">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search users...">
+            </div>
+            <button class="btn btn-primary"><i class="fas fa-plus"></i> Add User</button>
+          </div>
+          
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(function(user, idx) { %>
+                  <tr>
+                    <td><%= idx + 1 %></td>
+                    <td><%= user.username %></td>
+                    <td><%= user.email || 'N/A' %></td>
+                    <td><span class="badge badge-secondary">User</span></td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>
+                      <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                      <form action="/admin/users/<%= user._id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                        <button type="submit" class="btn-icon" style="color:red;"><i class="fas fa-trash"></i></button>
+                      </form>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="pagination">
+            <button class="btn btn-outline"><i class="fas fa-chevron-left"></i></button>
+            <button class="btn btn-outline active">1</button>
+            <button class="btn btn-outline">2</button>
+            <button class="btn btn-outline">3</button>
+            <button class="btn btn-outline"><i class="fas fa-chevron-right"></i></button>
+          </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics-section" class="content-section">
+          <h1><i class="fas fa-chart-line"></i> Analytics</h1>
+          
+          <div class="analytics-grid">
+            <div class="analytics-card wide">
+              <h2><i class="fas fa-chart-bar"></i> User Growth</h2>
+              <canvas id="userGrowthChart" style="width:100%;max-width:700px;"></canvas>
+              <canvas id="userDailyChart" style="width:100%;max-width:700px;margin-top:30px;"></canvas>
+            </div>
+            
+            <div class="analytics-card">
+              <h2><i class="fas fa-chart-pie"></i> User Roles</h2>
+              <canvas id="userRolesChart" style="width:100%;max-width:350px;"></canvas>
+            </div>
+            
+            <div class="analytics-card">
+              <h2><i class="fas fa-map-marked-alt"></i> User Locations</h2>
+              <div class="chart-placeholder">
+                <p>Map showing user locations</p>
+              </div>
+            </div>
+            
+            <div class="analytics-card wide">
+              <h2><i class="fas fa-calendar-alt"></i> Activity Timeline</h2>
+              <div class="chart-placeholder">
+                <p>Timeline of user activity</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings-section" class="content-section">
+          <h1><i class="fas fa-cog"></i> Settings</h1>
+          
+          <div class="settings-tabs">
+            <div class="tab-nav">
+              <button class="tab-btn active" data-tab="general">General</button>
+              <button class="tab-btn" data-tab="security">Security</button>
+              <button class="tab-btn" data-tab="notifications">Notifications</button>
+              <button class="tab-btn" data-tab="advanced">Advanced</button>
+            </div>
+            
+            <div class="tab-content active" id="general-tab">
+              <form class="settings-form">
+                <div class="form-group">
+                  <label>Site Title</label>
+                  <input type="text" value="Admin Dashboard">
+                </div>
+                
+                <div class="form-group">
+                  <label>Timezone</label>
+                  <select>
+                    <option>(UTC) Coordinated Universal Time</option>
+                    <option selected>(UTC-05:00) Eastern Time</option>
+                    <option>(UTC-08:00) Pacific Time</option>
+                  </select>
+                </div>
+                
+                <div class="form-group">
+                  <label>Maintenance Mode</label>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="maintenance-mode">
+                    <label for="maintenance-mode"></label>
+                  </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save Settings</button>
+              </form>
+            </div>
+            
+            <div class="tab-content" id="security-tab">
+              <form class="settings-form">
+                <div class="form-group">
+                  <label>Password Requirements</label>
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox" checked> Minimum 8 characters
+                    </label>
+                    <label>
+                      <input type="checkbox" checked> Require numbers
+                    </label>
+                    <label>
+                      <input type="checkbox"> Require special characters
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Login Attempts Before Lockout</label>
+                  <input type="number" value="5" min="1" max="10">
+                </div>
+                
+                <div class="form-group">
+                  <label>Session Timeout</label>
+                  <select>
+                    <option>15 minutes</option>
+                    <option selected>30 minutes</option>
+                    <option>1 hour</option>
+                    <option>2 hours</option>
+                  </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save Security Settings</button>
+              </form>
+            </div>
+            
+            <div class="tab-content" id="notifications-tab">
+              <form class="settings-form">
+                <div class="form-group">
+                  <label>Email Notifications</label>
+                  <div class="checkbox-group">
+                    <label>
+                      <input type="checkbox" checked> New user registrations
+                    </label>
+                    <label>
+                      <input type="checkbox" checked> Failed login attempts
+                    </label>
+                    <label>
+                      <input type="checkbox"> System updates
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Notification Email</label>
+                  <input type="email" value="admin@example.com">
+                </div>
+                
+                <div class="form-group">
+                  <label>Notification Frequency</label>
+                  <select>
+                    <option>Immediately</option>
+                    <option selected>Daily summary</option>
+                    <option>Weekly summary</option>
+                  </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Save Notification Settings</button>
+              </form>
+            </div>
+            
+            <div class="tab-content" id="advanced-tab">
+              <form class="settings-form">
+                <div class="form-group">
+                  <label>API Access</label>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="api-access" checked>
+                    <label for="api-access"></label>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>API Key</label>
+                  <div class="input-group">
+                    <input type="text" value="sk_test_51H...W3F" readonly>
+                    <button type="button" class="btn btn-outline">Regenerate</button>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label>Database Backup</label>
+                  <button type="button" class="btn btn-outline"><i class="fas fa-download"></i> Download Backup</button>
+                </div>
+                
+                <div class="form-group danger-zone">
+                  <label>Reset All Settings</label>
+                  <button type="button" class="btn btn-danger"><i class="fas fa-exclamation-triangle"></i> Reset to Defaults</button>
+                  <p class="warning-text">This will reset all settings to their default values.</p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="/javascripts/dashboard.js"></script>
+  <script>
+// User search functionality
+const userSearchInput = document.querySelector('.search-box input');
+const userRows = document.querySelectorAll('.data-table tbody tr');
+userSearchInput.addEventListener('input', function() {
+  const query = this.value.toLowerCase();
+  userRows.forEach(row => {
+    const username = row.children[1].textContent.toLowerCase();
+    const email = row.children[2].textContent.toLowerCase();
+    if (username.includes(query) || email.includes(query)) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Data from backend
+  const dailyLabels = <%- dailyLabels %>;
+  const dailyCounts = <%- dailyCounts %>;
+  const cumulativeCounts = <%- cumulativeCounts %>;
+  const roleLabels = <%- JSON.stringify(roleLabels) %>;
+  const roleCounts = <%- JSON.stringify(roleCounts) %>;
+
+  // Cumulative User Growth Chart
+  const ctxGrowth = document.getElementById('userGrowthChart').getContext('2d');
+  new Chart(ctxGrowth, {
+    type: 'line',
+    data: {
+      labels: dailyLabels,
+      datasets: [{
+        label: 'Cumulative Users',
+        data: cumulativeCounts,
+        borderColor: '#f54725',
+        backgroundColor: 'rgba(245,71,37,0.1)',
+        fill: true,
+        tension: 0.2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        title: { display: true, text: 'Cumulative User Growth' }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Date' } },
+        y: { title: { display: true, text: 'Total Users' }, beginAtZero: true }
+      }
+    }
+  });
+
+  // Daily New Registrations Chart
+  const ctxDaily = document.getElementById('userDailyChart').getContext('2d');
+  new Chart(ctxDaily, {
+    type: 'bar',
+    data: {
+      labels: dailyLabels,
+      datasets: [{
+        label: 'New Registrations',
+        data: dailyCounts,
+        backgroundColor: '#f9d678',
+        borderColor: '#f54725',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        title: { display: true, text: 'Daily New Registrations' }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Date' } },
+        y: { title: { display: true, text: 'Users' }, beginAtZero: true }
+      }
+    }
+  });
+
+  // User Roles Pie/Doughnut Chart
+  const ctxRoles = document.getElementById('userRolesChart').getContext('2d');
+  new Chart(ctxRoles, {
+    type: 'doughnut',
+    data: {
+      labels: roleLabels,
+      datasets: [{
+        label: 'Users by Role',
+        data: roleCounts,
+        backgroundColor: [
+          '#f54725', '#f9d678', '#13313c', '#475569', '#54a0ff', '#00b894', '#fdcb6e'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true },
+        title: { display: true, text: 'User Role Distribution' }
+      }
+    }
+  });
+</script>
+</body>
+</html>
