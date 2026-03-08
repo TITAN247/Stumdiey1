@@ -1,7 +1,13 @@
-const mongoose=require('mongoose');
-const plm=require("passport-local-mongoose");
+const mongoose = require('mongoose');
+const plm = require("passport-local-mongoose");
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/STY';
-mongoose.connect(MONGODB_URI);
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('Successfully connected to MongoDB!'))
+  .catch(err => {
+    console.error('MongoDB connection error:', err);
+    console.error('Did you add the correct MONGODB_URI environment variable?');
+  });
 
 const userSchema = new mongoose.Schema({
   username: {
