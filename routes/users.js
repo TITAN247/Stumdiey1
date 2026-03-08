@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const plm = require("passport-local-mongoose");
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/STY';
 
-mongoose.connect(MONGODB_URI)
+mongoose.connect(MONGODB_URI, { serverSelectionTimeoutMS: 5000, family: 4 })
   .then(() => console.log('Successfully connected to MongoDB!'))
   .catch(err => {
     console.error('MongoDB connection error:', err);
